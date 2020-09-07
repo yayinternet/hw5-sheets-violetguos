@@ -4,7 +4,7 @@
   "description": "CS193X HW5",
   "main": "server.js",
   "engines": {
-    "node": "7x"
+    "node": "7.10.0"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
