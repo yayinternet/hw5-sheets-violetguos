@@ -37,10 +37,22 @@ app.get("/api", onGet);
 
 async function onPost(req, res) {
   const messageBody = req.body;
+  console.log(messageBody);
+  const result = await sheet.getRows();
+  const rows = result.rows;
+  // parse headers
+  const header = rows[0];
 
-  // TODO(you): Implement onPost.
+  const newRow = [];
+  for (let i = 0; i < header.length; i++) {
+    for (let key in messageBody) {
+      if (key == header[i]) newRow.push(messageBody[key]);
+    }
+  }
 
-  res.json({ status: "unimplemented" });
+  const postResult = await sheet.appendRow(newRow.reverse());
+
+  res.json({ status: "success" });
 }
 app.post("/api", jsonParser, onPost);
 
