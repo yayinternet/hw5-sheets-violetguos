@@ -59,9 +59,21 @@ async function onDelete(req, res) {
   const column = req.params.column;
   const value = req.params.value;
 
-  // TODO(you): Implement onDelete.
+  const result = await sheet.getRows();
+  const rows = result.rows;
+  const headers = rows[0];
+  let colIndex = 0;
+  let rowIndex = 0;
+  for (let i = 0; i < headers.length; i++) {
+    for (let j = 1; j < rows.length; j++) {
+      if (headers[i] == column && rows[j][i] == value) {
+        // found the column to delete
+        const deleteRes = await sheet.deleteRow(j);
+      }
+    }
+  }
 
-  res.json({ status: "unimplemented" });
+  res.json({ response: "success" });
 }
 app.delete("/api/:column/:value", onDelete);
 
