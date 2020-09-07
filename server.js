@@ -61,9 +61,35 @@ async function onPatch(req, res) {
   const value = req.params.value;
   const messageBody = req.body;
 
-  // TODO(you): Implement onPatch.
+  const result = await sheet.getRows();
+  const rows = result.rows;
+  // parse headers
+  const header = rows[0];
 
-  res.json({ status: "unimplemented" });
+  let changeIdx;
+  let changeKey;
+  for (let i = 0; i < header.length; i++) {
+    for (let key in messageBody) {
+      if (header[i] == key) {
+        changeKey = key;
+        changeIdx = i;
+      }
+    }
+  }
+
+  for (let i = 0; i < header.length; i++) {
+    if (column == header[i]) {
+      for (let j = 1; j < rows.length; j++) {
+        if (value == rows[j][i]) {
+          const newRow = rows[j];
+          newRow[changeIdx] = messageBody[changeKey];
+          const patchRes = await sheet.setRow(j, newRow);
+        }
+      }
+    }
+  }
+
+  res.json({ status: "success" });
 }
 app.patch("/api/:column/:value", jsonParser, onPatch);
 
